@@ -8,8 +8,7 @@ import {
   Form,
   FormGroup,
   Label,
-  Input,
-  FormText,
+  Input
 } from 'reactstrap';
 
 const LoginModal = ({isOpen, toggleOpen}) => {
@@ -29,6 +28,7 @@ const LoginModal = ({isOpen, toggleOpen}) => {
                 name="username"
                 id="username"
                 placeholder="Enter Username"
+                required
               />
             </FormGroup>
             <FormGroup>
@@ -38,6 +38,7 @@ const LoginModal = ({isOpen, toggleOpen}) => {
                 name="password"
                 id="password"
                 placeholder="Enter Password"
+                required
               />
             </FormGroup>
 
