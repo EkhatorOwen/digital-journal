@@ -27,7 +27,6 @@ const LoginModal = ({isOpen, toggleOpen}) => {
                 type="name"
                 name="username"
                 id="username"
-                placeholder="Enter Username"
                 required
               />
             </FormGroup>
@@ -37,7 +36,6 @@ const LoginModal = ({isOpen, toggleOpen}) => {
                 type="password"
                 name="password"
                 id="password"
-                placeholder="Enter Password"
                 required
               />
             </FormGroup>

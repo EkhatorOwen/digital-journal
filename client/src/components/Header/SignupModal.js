@@ -29,7 +29,6 @@ const SignupModal = ({toggleOpen, isOpen}) => {
                 type="name"
                 name="username"
                 id="username"
-                placeholder="Enter Username"
                 required
               />
             </FormGroup>
@@ -39,7 +38,6 @@ const SignupModal = ({toggleOpen, isOpen}) => {
                 type="password"
                 name="password"
                 id="password"
-                placeholder="Enter Password"
                 required
               />
             </FormGroup>
@@ -50,7 +48,6 @@ const SignupModal = ({toggleOpen, isOpen}) => {
                 type="password"
                 name="comfirm password"
                 id="confirmPassword"
-                placeholder="Enter Password"
                 required
               />
             </FormGroup>
