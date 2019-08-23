@@ -1,15 +1,16 @@
 import React, {useState} from 'react';
 import Header from './components/Header/Header.js';
-import { Container, Row } from 'reactstrap'
+import { Container } from 'reactstrap';
+import  Homepage from './components/Homepage/Homepage';
+import WelcomeBadge from './components/WelcomeBadge/WelcomeBadge';
 
 function App () {
+  const [isLoggedIn, setLogedIn] = useState(false)
   return (
     <div>
       <Header />
       <Container>
-        <Row>
-        
-        </Row>
+       { isLoggedIn ? <WelcomeBadge/> : <Homepage/>}
       </Container>
     </div>
   );
