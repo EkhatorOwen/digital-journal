@@ -1,3 +1,17 @@
-float_right {
-  float: right;
+.float-right {
+  float: right !important;
+}
+
+.card-container {
+  margin-top: 2em;
+}
+
+.card-component {
+  margin-top: 3em;
+  margin-bottom: 1em;
+}
+
+.instruction {
+  margin-left: 2em;
+  font-size: 11px;
 }
