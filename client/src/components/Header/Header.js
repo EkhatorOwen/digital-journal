@@ -6,11 +6,6 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
-  Container,
-  Row,
-  Col,
-  Jumbotron,
   Button,
 } from 'reactstrap';
 
@@ -35,7 +30,7 @@ const Header = () => {
   };
   return (
     <div>
-      <Navbar color="inverse" light expand="md">
+      <Navbar color="green" light expand="md">
         <NavbarBrand href="/">Digital Journal</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
@@ -45,21 +40,12 @@ const Header = () => {
             </NavItem>
             <NavItem>
               
-              <Button onClick={()=>toggleOpen('login')} color="green">Sign Up</Button>
+              <Button onClick={()=>toggleOpen('signup')} color="green">Sign Up</Button>
             </NavItem>
           </Nav>
         </Collapse>
       </Navbar>
-      <Jumbotron>
-        <Container>
-          <Row>
-            <Col>
-              <h1>Welcome</h1>
-
-            </Col>
-          </Row>
-        </Container>
-      </Jumbotron>
+      
       <LoginModal isOpen={loginModalOpen} toggleOpen={toggleOpen}/>
       <SignupModal isOpen={signUpModalOpen} toggleOpen={toggleOpen} />
     </div>
