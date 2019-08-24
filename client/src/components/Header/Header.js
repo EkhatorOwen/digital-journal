@@ -12,7 +12,7 @@ import {
 import LoginModal from './LoginModal'
 import SignupModal from './SignupModal'
 
-const Header = () => {
+const Header = (props) => {
   const [isOpen, updateOpen] = useState(false);
   const [loginModalOpen, updateLoginModal] = useState(false);
   const [signUpModalOpen, updateSignUpModal] = useState(false);
@@ -20,8 +20,10 @@ const Header = () => {
  const toggleOpen = (type) =>{
     if(type==="login"){
       updateLoginModal(!loginModalOpen)
+      props.emptyFields()
     } else if(type==="signup"){
       updateSignUpModal(!signUpModalOpen)
+      props.emptyFields()
     }
   }
 
@@ -46,8 +48,8 @@ const Header = () => {
         </Collapse>
       </Navbar>
       
-      <LoginModal isOpen={loginModalOpen} toggleOpen={toggleOpen}/>
-      <SignupModal isOpen={signUpModalOpen} toggleOpen={toggleOpen} />
+      <LoginModal {...props}  isOpen={loginModalOpen} toggleOpen={toggleOpen}/>
+      <SignupModal {...props} isOpen={signUpModalOpen} toggleOpen={toggleOpen} />
     </div>
   );
 };
