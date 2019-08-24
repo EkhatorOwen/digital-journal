@@ -11,7 +11,7 @@ import {
   Input
 } from 'reactstrap';
 
-const LoginModal = ({isOpen, toggleOpen}) => {
+const LoginModal = ({isOpen, toggleOpen,...props}) => {
   return (
     <div>
       <Modal isOpen={isOpen} toggle={() => toggleOpen ('login')}>
@@ -24,9 +24,11 @@ const LoginModal = ({isOpen, toggleOpen}) => {
             <FormGroup>
               <Label for="username">Username:</Label>
               <Input
-                type="name"
+                type="text"
                 name="username"
                 id="username"
+                value={props.username}
+                onChange={e=>props.handleUsernameChange(e.target.value)}
                 required
               />
             </FormGroup>
@@ -36,6 +38,8 @@ const LoginModal = ({isOpen, toggleOpen}) => {
                 type="password"
                 name="password"
                 id="password"
+                value={props.password}
+                onChange={e=>props.handlePasswordChange(e.target.value)}
                 required
               />
             </FormGroup>

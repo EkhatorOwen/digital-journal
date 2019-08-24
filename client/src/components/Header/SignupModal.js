@@ -14,7 +14,7 @@ import {
   Row
 } from 'reactstrap';
 
-const SignupModal = ({toggleOpen, isOpen}) => {
+const SignupModal = ({toggleOpen, isOpen,...props}) => {
   return (
     <div>
       <Modal isOpen={isOpen} toggle={() => toggleOpen ('signup')}>
@@ -26,9 +26,11 @@ const SignupModal = ({toggleOpen, isOpen}) => {
             <FormGroup>
               <Label for="username">Username:</Label>
               <Input
-                type="name"
+                type="text"
                 name="username"
                 id="username"
+                value={props.username}
+                onChange={e=>props.handleUsernameChange(e.target.value)}
                 required
               />
             </FormGroup>
@@ -38,6 +40,8 @@ const SignupModal = ({toggleOpen, isOpen}) => {
                 type="password"
                 name="password"
                 id="password"
+                value={props.password}
+                onChange={e=>props.handlePasswordChange(e.target.value)}
                 required
               />
             </FormGroup>
@@ -48,6 +52,8 @@ const SignupModal = ({toggleOpen, isOpen}) => {
                 type="password"
                 name="comfirm password"
                 id="confirmPassword"
+                value={props.confirmPassword}
+                onChange={e=>props.handleConfirmPasswordChange(e.target.value)}
                 required
               />
             </FormGroup>
