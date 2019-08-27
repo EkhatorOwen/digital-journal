@@ -24,7 +24,7 @@ function App () {
     setConfirmPassword (val);
   };
 
-  const handleSubmit = (e) =>{
+  const handleLogin = (e) =>{
     e.preventDefault();
     axios.post('/api',{username,password})
          .then(resp=>console.log(resp))
@@ -48,10 +48,10 @@ function App () {
         handlePasswordChange={handlePasswordChange}
         handleConfirmPasswordChange={handleConfirmPasswordChange}
         emptyFields={emptyFields}
-
+        handleLogin={handleLogin}
       />
       <Container>
-        {isLoggedIn ? <WelcomeBadge /> : <Homepage handleSubmit={handleSubmit} />}
+        {isLoggedIn ? <WelcomeBadge /> : <Homepage handleLogin={handleLogin} />}
       </Container>
     </div>
   );

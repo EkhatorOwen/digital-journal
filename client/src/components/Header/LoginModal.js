@@ -50,7 +50,7 @@ const LoginModal = ({isOpen, toggleOpen,...props}) => {
               Cancel
             </Button>
             {' '}
-            <Button color="primary">
+            <Button onClick={props.handleLogin} color="primary">
             Log In
           </Button>
           </ModalFooter>
