@@ -3,10 +3,15 @@ require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const mongoose = require('mongoose')
 const cors = require('cors');
 const PORT = process.env.PORT || 3001;
 
 const app = express()
+
+mongoose.connect(process.env.MONGO_URL).catch(err => {
+  console.log("error connecting to DB:", err);
+});
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -22,7 +27,8 @@ app.use(
   })
 )
 
-app.get('/api',(req,res)=>{
+app.post('/api',(req,res)=>{
+  console.log(req.body)
   res.send('hello world')
 })
 
