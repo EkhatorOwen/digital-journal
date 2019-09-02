@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Collapse,
   Navbar,
@@ -13,29 +13,26 @@ import LoginModal from './LoginModal'
 import SignupModal from './SignupModal'
 
 const Header = (props) => {
-  const [isOpen, updateOpen] = useState(false);
-  const [loginModalOpen, updateLoginModal] = useState(false);
-  const [signUpModalOpen, updateSignUpModal] = useState(false);
 
  const toggleOpen = (type) =>{
     if(type==="login"){
-      updateLoginModal(!loginModalOpen)
+      props.updateLoginModal(!props.loginModalOpen)
       props.emptyFields()
     } else if(type==="signup"){
-      updateSignUpModal(!signUpModalOpen)
+      props.updateSignUpModal(!props.signUpModalOpen)
       props.emptyFields()
     }
   }
 
   const toggle = () => {
-    updateOpen (!isOpen);
+    props.updateOpen (!props.isOpen);
   };
   return (
     <div>
       <Navbar color="green" light expand="md">
         <NavbarBrand href="/">Digital Journal</NavbarBrand>
         <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
+        <Collapse isOpen={props.isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
               <Button onClick={()=>toggleOpen('login')} color="green">Login</Button>
@@ -48,8 +45,8 @@ const Header = (props) => {
         </Collapse>
       </Navbar>
       
-      <LoginModal {...props}  isOpen={loginModalOpen} toggleOpen={toggleOpen}/>
-      <SignupModal {...props} isOpen={signUpModalOpen} toggleOpen={toggleOpen} />
+      <LoginModal {...props}  isOpen={props.loginModalOpen} toggleOpen={toggleOpen}/>
+      <SignupModal {...props} isOpen={props.signUpModalOpen} toggleOpen={toggleOpen} />
     </div>
   );
 };
