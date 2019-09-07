@@ -71,7 +71,17 @@ module.exports = app => {
   })
 
   //check if there is a logged in user in the session
-    app.post('/api/getuser',checkToken,(req,res)=>{
-        
+    app.get('/api/getuser',checkToken,(req,res)=>{
+      console.log(req.session.token)
+      jwt.verify (req.session.token, process.env.JWTSECRET, (err, authData) => {
+        if (err) {
+          res.status (200).json ({type:'error',message: "invalid token"});
+        } else {
+          delete req.user;
+          delete req.session.user;
+          delete req.session.token;
+          res.status (200).json ({type:'success',authData});
+        }
+      });
     })
 };
