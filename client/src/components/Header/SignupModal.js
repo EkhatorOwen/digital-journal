@@ -58,13 +58,13 @@ const SignupModal = ({toggleOpen, isOpen,...props}) => {
               />
             </FormGroup>
           </ModalBody>
-          <Container><Row><Col sm="12" md={{ size: 6, offset: 3 }}><p>this is an error message</p></Col></Row></Container>
+          <Container><Row><Col sm="12" md={{ size: 6, offset: 3 }}><p style={{color:"red"}}>{props.errorMsg}</p></Col></Row></Container>
           <ModalFooter>
             <Button color="danger" onClick={() => toggleOpen ('signup')}>
               Cancel
             </Button>
             {' '}
-            <Button color="primary">
+            <Button onClick={props.handleSignup} color="primary">
               Sign Up
             </Button>
           </ModalFooter>
