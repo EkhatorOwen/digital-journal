@@ -7,7 +7,10 @@ const mongoose = require('mongoose')
 const cors = require('cors');
 const PORT = process.env.PORT || 3001;
 
-const app = express()
+
+const authRoute = require('./routes/authRoute');
+
+const app = express();
 
 mongoose.connect(process.env.MONGO_URL).catch(err => {
   console.log("error connecting to DB:", err);
@@ -27,10 +30,13 @@ app.use(
   })
 )
 
+authRoute(app);
+
 app.post('/api',(req,res)=>{
   console.log(req.body)
   res.send('hello world')
 })
+
 
 app.listen(PORT, ()=>{
   console.log(` Now listening on port ${PORT}` )
