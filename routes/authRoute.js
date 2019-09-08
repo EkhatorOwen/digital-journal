@@ -5,8 +5,9 @@ const checkToken = require('../middleware/checkToken');
 
 module.exports = app => {
   //login route
-  app.post ('/api/login', (req, res) => {
+  app.post ('/api/login',(req, res) => {
     const {username, password} = req.body;
+    console.log(username)
     User.findOne ({username}).then (resp => {
       if (resp) {
         if (bcrypt.compareSync (password, resp.password)) {
@@ -16,10 +17,10 @@ module.exports = app => {
             res.status (200).json ({type:'success', resp, token});
           })
         } else {
-          res.send ({type:'err', message:'Wrong username or password'});
+          res.send ({type:'error', message:'Wrong username or password'});
         }
       } else {
-        res.send ({type: 'err', message: 'user not found'});
+        res.send ({type: 'error', message: 'user not found'});
       }
     });
   }), 
@@ -57,10 +58,10 @@ module.exports = app => {
     });
   });
 
-  app.post('/api/logout',checkToken,(req,res)=>{
+  app.get('/api/logout',checkToken,(req,res)=>{
     jwt.verify (req.session.token, process.env.JWTSECRET, (err, authData) => {
       if (err) {
-        res.sendStatus (403);
+        res.sendStatus (405);
       } else {
         delete req.user;
         delete req.session.user;
@@ -72,7 +73,6 @@ module.exports = app => {
 
   //check if there is a logged in user in the session
     app.get('/api/getuser',checkToken,(req,res)=>{
-      console.log(req.session.token)
       jwt.verify (req.session.token, process.env.JWTSECRET, (err, authData) => {
         if (err) {
           res.status (200).json ({type:'error',message: "invalid token"});
