@@ -9,7 +9,7 @@ module.exports = (req, res, next)=>{
     const bearerToken = bearer[1]
 
     //set the token
-    req.token = bearerToken
+    req.session.token = bearerToken
 
     next();
   } else {
