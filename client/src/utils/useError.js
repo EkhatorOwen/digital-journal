@@ -1,14 +1,15 @@
-import react, {useState,useEffect} from 'react';
+import  {useState,useEffect} from 'react';
 
 
 export const useError = (message,timer)=>{
   const [mess, setMessage] = useState(message);
+  let time = timer || null
 
   useEffect(()=>{
     setTimeout(() => {
       setMessage('')
-    }, timer);
-  })
+    }, time);
+  },)
 
   return [mess, setMessage]
 }
