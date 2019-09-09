@@ -9,20 +9,19 @@ import {
   Button,
 } from 'reactstrap';
 
-import LoginModal from './LoginModal'
-import SignupModal from './SignupModal'
+import LoginModal from './LoginModal';
+import SignupModal from './SignupModal';
 
-const Header = (props) => {
-
- const toggleOpen = (type) =>{
-    if(type==="login"){
-      props.updateLoginModal(!props.loginModalOpen)
-      props.emptyFields()
-    } else if(type==="signup"){
-      props.updateSignUpModal(!props.signUpModalOpen)
-      props.emptyFields()
+const Header = props => {
+  const toggleOpen = type => {
+    if (type === 'login') {
+      props.updateLoginModal (!props.loginModalOpen);
+      props.emptyFields ();
+    } else if (type === 'signup') {
+      props.updateSignUpModal (!props.signUpModalOpen);
+      props.emptyFields ();
     }
-  }
+  };
 
   const toggle = () => {
     props.updateOpen (!props.isOpen);
@@ -34,19 +33,40 @@ const Header = (props) => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={props.isOpen} navbar>
           <Nav className="ml-auto" navbar>
-            <NavItem>
-              <Button onClick={()=>toggleOpen('login')} color="green">Login</Button>
-            </NavItem>
-            <NavItem>
-              
-              <Button onClick={()=>toggleOpen('signup')} color="green">Sign Up</Button>
-            </NavItem>
+            {!props.isLoggedIn &&
+              <>
+                <NavItem>
+                  <Button onClick={() => toggleOpen ('login')} color="green">
+                    Login
+                  </Button>
+                </NavItem>
+                <NavItem>
+                  <Button onClick={() => toggleOpen ('signup')} color="green">
+                    Sign Up
+                  </Button>
+                </NavItem>
+              </>}
+
+            {props.isLoggedIn &&
+              <NavItem>
+                <Button onClick={props.logOut} color="green">
+                  Log Out
+                </Button>
+              </NavItem>}
           </Nav>
         </Collapse>
       </Navbar>
-      
-      <LoginModal {...props}  isOpen={props.loginModalOpen} toggleOpen={toggleOpen}/>
-      <SignupModal {...props} isOpen={props.signUpModalOpen} toggleOpen={toggleOpen} />
+
+      <LoginModal
+        {...props}
+        isOpen={props.loginModalOpen}
+        toggleOpen={toggleOpen}
+      />
+      <SignupModal
+        {...props}
+        isOpen={props.signUpModalOpen}
+        toggleOpen={toggleOpen}
+      />
     </div>
   );
 };
