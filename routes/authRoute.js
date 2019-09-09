@@ -7,10 +7,11 @@ module.exports = app => {
   //login route
   app.post ('/api/login',(req, res) => {
     const {username, password} = req.body;
-    console.log(username)
+ //   console.log(username)
     User.findOne ({username}).then (resp => {
       if (resp) {
         if (bcrypt.compareSync (password, resp.password)) {
+          
           req.session.user = resp;
           jwt.sign({resp},process.env.JWTSECRET, (err, token)=>{
             req.session.token = token;
@@ -77,10 +78,8 @@ module.exports = app => {
         if (err) {
           res.status (200).json ({type:'error',message: "invalid token"});
         } else {
-          delete req.user;
-          delete req.session.user;
-          delete req.session.token;
-          res.status (200).json ({type:'success',authData});
+       
+          res.status (200).json ({type:'success',message: req.session.user});
         }
       });
     })
