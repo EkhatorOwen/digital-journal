@@ -8,7 +8,10 @@ import {
   Form,
   FormGroup,
   Label,
-  Input
+  Input,
+  Container,
+  Row,
+  Col
 } from 'reactstrap';
 
 const LoginModal = ({isOpen, toggleOpen,...props}) => {
@@ -45,6 +48,7 @@ const LoginModal = ({isOpen, toggleOpen,...props}) => {
             </FormGroup>
 
           </ModalBody>
+          <Container><Row><Col sm="12" md={{ size: 6, offset: 3 }}><p style={{color:"red"}}>{props.errorMsg}</p></Col></Row></Container>
           <ModalFooter>
             <Button color="danger" onClick={() => toggleOpen ('login')}>
               Cancel
