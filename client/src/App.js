@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios'
-import { useCookies } from 'react-cookie';
-import { useError } from './utils/useError';
+import axios from 'axios';
+import {useCookies} from 'react-cookie';
+import {useError} from './utils/useError';
 
 import Header from './components/Header/Header.js';
 import {Container} from 'reactstrap';
@@ -10,34 +10,39 @@ import WelcomeBadge from './components/WelcomeBadge/WelcomeBadge';
 
 function App () {
   const [isLoggedIn, setLoggedIn] = useState (false);
+  const [userId, setUserId] = useState('')
   const [username, setUsername] = useState ('');
   const [password, setPassword] = useState ('');
   const [confirmPassword, setConfirmPassword] = useState ('');
-  const [errorMsg, setErrormsg] = useState('')
-  const [cookie, setCookie, removeCookie] = useCookies(['auth'])
-  const [isOpen, updateOpen] = useState(false);
-  const [loginModalOpen, updateLoginModal] = useState(false);
-  const [signUpModalOpen, updateSignUpModal] = useState(false);
+  const [cookie, setCookie, removeCookie] = useCookies (['auth']);
+  const [isOpen, updateOpen] = useState (false);
+  const [loginModalOpen, updateLoginModal] = useState (false);
+  const [signUpModalOpen, updateSignUpModal] = useState (false);
+  const [error, setError] = useError('',5000);
 
-  useEffect(() => {
-    //check if there is a cookie, then send the cookie to the backend to 
+  useEffect (() => {
+    //check if there is a cookie, then send the cookie to the backend to
     axios
-    .get('/api/getuser', {
+      .get ('/api/getuser', {
         headers: {
           Authorization: `Bearer ${cookie.auth}`,
         },
       })
-         .then(resp=>{ 
-           if(resp.data.type=="error"){
-           return setLoggedIn(false)
-           } else if(resp.data.type=="success"){
-              return  setLoggedIn(true)
-           }
-           return setLoggedIn(false)
-         })
-         .catch(err=>{console.log(err)})
-
-  }, [])
+      .then (resp => {
+         // const { data } = resp.data;
+         console.log('called')
+        if (resp.data.type === 'error') {
+          return setLoggedIn (false);
+        } else if (resp.data.type === 'success') {
+         // setUserId(username)
+          return setLoggedIn (true);
+        }
+        return setLoggedIn (false);
+      })
+      .catch (err => {
+        console.log (err);
+      });
+  },[cookie.auth]);
 
   const handleUsernameChange = val => {
     setUsername (val);
@@ -46,62 +51,76 @@ function App () {
   const handlePasswordChange = val => {
     setPassword (val);
   };
-  
+
   const handleConfirmPasswordChange = val => {
     setConfirmPassword (val);
   };
 
-  const logOut = () =>{
-    axios.post('/api/logout',{
-      headers: {
-        Authorization: `Bearer ${cookie.auth}`,
-      },
-    })
-         .then(resp=>{
-           removeCookie('auth')
-         })
+  const logOut = () => {
+    axios
+    .get ('/api/logout', {
+        headers: {
+          Authorization: `Bearer ${cookie.auth}`,
+        },
+      })
+      .then (resp => {
+        removeCookie('auth')
+        setUserId('')
+        setLoggedIn (false);
+        emptyFields()
+      })
+      .catch (err => console.log (err));
+  };
+
+  const handleLogin = e => {
+    e.preventDefault ();
+    if(password===""||username===""){
+      return setError("Username or Password cannot be blank")
+    }
+    axios
+      .post (
+        '/api/login',
+        {username, password}
+      )
+      .then (resp => {
+        if (resp.data.type === 'success') {
+          setUserId(resp.data.resp._id)
+          setLoggedIn (true);
+          updateLoginModal(false)
+          return setCookie ('auth', resp.data.token);
         }
+         else if (resp.data.type==='error'){
+            return setError(resp.data.message)
+         }
 
-  const handleLogin = (e) =>{
-    e.preventDefault();
-    axios.post('/api/login'{
-      headers: {
-        Authorization: `Bearer ${cookie.auth}`,
-      },
-    }    ,{username,password})
-         .then(resp=>{
-           if(resp.data.type==='success'){                          
-               setLoggedIn(true)
-              return setCookie('auth',resp.data.token)
-           } 
-          //  else if (resp.data.type==='error'){
-             
-          //  }
-          console.log(resp.data)
-         })
-         .catch(err=>console.log(err))
-  }
+        console.log (resp.data);
+      })
+      .catch (err => console.log (err));
+  };
 
-  const handleSignup = (e) => {
-    e.preventDefault();
-    if(password!==confirmPassword) {
-      setErrormsg('passwords do not match')
+  const handleSignup = e => {
+    e.preventDefault ();
+    if (password !== confirmPassword) {
+      setError ('passwords do not match');
       return;
     }
-    axios.post('/api/signup',{username,password})
-          .then(resp=>{
-            setCookie('auth',resp.data.token)
-          })
-          .catch(err=>console.log(err))
-  }
+    axios
+      .post ('/api/signup', {username, password})
+      .then (resp => {
+        setUserId(resp.data.resp._id)
+        setLoggedIn (true);
+        updateSignUpModal(false)
+        return  setCookie ('auth', resp.data.token);
+      })
+      .catch (err => console.log (err));
+  };
 
-  const emptyFields = () =>{
-    setUsername('');
-    setPassword('');
-    setConfirmPassword('');
-    setErrormsg('');
-  }
-
+  const emptyFields = () => {
+    setUsername ('');
+    setPassword ('');
+    setConfirmPassword ('');
+    setError ('');
+  };
 
   return (
     <div>
@@ -114,8 +133,8 @@ function App () {
         handleConfirmPasswordChange={handleConfirmPasswordChange}
         emptyFields={emptyFields}
         handleLogin={handleLogin}
-        setErrormsg={setErrormsg}
-        errorMsg={errorMsg}
+        setErrormsg={setError}
+        errorMsg={error}
         handleSignup={handleSignup}
         isOpen={isOpen}
         updateOpen={updateOpen}
@@ -123,10 +142,11 @@ function App () {
         updateLoginModal={updateLoginModal}
         signUpModalOpen={signUpModalOpen}
         updateSignUpModal={updateSignUpModal}
-
+        isLoggedIn={isLoggedIn}
+        logOut={logOut}
       />
       <Container>
-        {isLoggedIn ? <Homepage /> : <WelcomeBadge /> }
+        {isLoggedIn ? <Homepage userId={userId} /> : <WelcomeBadge />}
       </Container>
     </div>
   );
