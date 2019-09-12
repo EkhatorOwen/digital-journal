@@ -1,6 +1,7 @@
 
 module.exports = (req, res, next)=>{
   const bearerHeader = req.headers['authorization'];
+    
   //check of bearer is undefined
   if(typeof bearerHeader !=='undefined'){
     const bearer = bearerHeader.split(' ');
