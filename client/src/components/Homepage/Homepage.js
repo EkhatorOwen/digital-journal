@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef,  useState} from 'react';
 import {
   Container,
   Row,
@@ -9,43 +9,68 @@ import {
   Col,
   Button,
 } from 'reactstrap';
+import {useCookies} from 'react-cookie';
+
+import axios from 'axios';
+
 import CardComponent from './CardComponent';
+
 import './Homepage.css';
 
-const Homepage = () => {
+const Homepage = ({userId}) => {
   const inputEl = useRef ();
   const [title, setTitle] = useState ('');
   const [body, setBody] = useState ('');
   const [titleCount, updatetitleCount] = useState (0);
   const [bodyCount, updatebodyCount] = useState (0);
+  const [cookie] = useCookies (['auth']);
 
   const handleTitleChange = e => {
-    if(20-e.target.value.length>=0){
+    if (20 - e.target.value.length >= 0) {
       setTitle (e.target.value);
       updateCount (e.target.value);
     }
   };
-  
-  const handleBodyChange = e =>{
-    if(30-e.target.value.length>=0){
+
+  const handleBodyChange = e => {
+    if (100 - e.target.value.length >= 0) {
       setBody (e.target.value);
       updateBodyCount (e.target.value);
     }
-  }
+  };
 
   const updateCount = val => {
     updatetitleCount (val.length);
   };
 
-  const updateBodyCount = val =>{
-    updatebodyCount(val.length)
-  }
+  const updateBodyCount = val => {
+    updatebodyCount (val.length);
+  };
 
   const focusOnTitle = e => {
     e.preventDefault ();
     const ele = document.getElementById ('title');
     ele.focus ();
     inputEl.current.focus ();
+  };
+
+  const handleSubmit = () => {
+    axios
+      .post ('/api/createnote', {
+        title,
+        body,
+        userId
+      }, {
+        headers: {
+          Authorization: `Bearer ${cookie.auth}`,
+        },
+       
+      })
+      .then (resp => {
+        setTitle('')
+        setBody('')
+      })
+      .catch (err => console.log (err));
   };
 
   return (
@@ -75,14 +100,20 @@ const Homepage = () => {
             <FormGroup>
               <Label for="body">Body:</Label>
               <Col sm={10}>
-                <Input value={body} type="textarea" name="text" id="body" onChange={e=>handleBodyChange(e)} />
-                <p className="float-right">{bodyCount}/30</p>
+                <Input
+                  value={body}
+                  type="textarea"
+                  name="text"
+                  id="body"
+                  onChange={e => handleBodyChange (e)}
+                />
+                <p className="float-right">{bodyCount}/100</p>
               </Col>
             </FormGroup>
             <p className="instruction">
               Use the form above to create a post and make sure you fill the required title and body fields and then press submit.
             </p>
-            <Button onClick={focusOnTitle}>Submit</Button>
+            <Button onClick={handleSubmit}>Submit</Button>
           </Form>
         </div>
         <div className="card-container">
