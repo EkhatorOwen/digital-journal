@@ -20,10 +20,12 @@ module.exports = app =>{
         })
         newNote.save()
                .then(resp=>{
-                 console.log(resp)
+                 res.status (200).json ({type:'success',message: "note successfully saved"});
+               })
+               .catch(e=>{
+                 console.log(e)
                })
 
-               res.status (200).json ({type:'success',message: "note successfully saved"});
 
       }
     })
