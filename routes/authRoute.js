@@ -2,6 +2,7 @@ const User = require ('../models/User');
 const bcrypt = require ('bcrypt');
 const jwt = require ('jsonwebtoken');
 const checkToken = require('../middleware/checkToken');
+const Note = require('../models/Note');
 
 module.exports = app => {
   //login route
@@ -78,7 +79,13 @@ module.exports = app => {
         if (err) {
           res.status (200).json ({type:'error',message: "invalid token"});
         } else {
-       
+          Note
+            .find({user: req.session.user._id})
+            .populate('user')
+            .then(resp=>console.log(resp))
+            .catch(err=>console.log(err))
+
+
           res.status (200).json ({type:'success',message: req.session.user});
         }
       });
