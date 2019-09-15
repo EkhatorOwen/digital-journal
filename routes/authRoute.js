@@ -82,8 +82,12 @@ module.exports = app => {
           Note
             .find({user: req.session.user._id})
             .populate('user')
-            .then(resp=>console.log(resp))
-            .catch(err=>console.log(err))
+            .then(resp=>{
+              res.status(200).json({type:'success',message: resp})
+            })
+            .catch(err=>{
+              res.redirect('/')
+              })
 
 
           res.status (200).json ({type:'success',message: req.session.user});
