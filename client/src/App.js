@@ -19,9 +19,14 @@ function App () {
   const [loginModalOpen, updateLoginModal] = useState (false);
   const [signUpModalOpen, updateSignUpModal] = useState (false);
   const [error, setError] = useError('',5000);
+  const [notes, setNotes] = useState([])
 
   useEffect (() => {
     //check if there is a cookie, then send the cookie to the backend to
+    getBooks();
+  },[cookie.auth]);
+
+  const getBooks = () =>{
     axios
       .get ('/api/getuser', {
         headers: {
@@ -30,11 +35,12 @@ function App () {
       })
       .then (resp => {
          // const { data } = resp.data;
-         console.log('called')
+        // console.log('called')
         if (resp.data.type === 'error') {
           return setLoggedIn (false);
         } else if (resp.data.type === 'success') {
          // setUserId(username)
+         setNotes(resp.data.message)
           return setLoggedIn (true);
         }
         return setLoggedIn (false);
@@ -42,7 +48,7 @@ function App () {
       .catch (err => {
         console.log (err);
       });
-  },[cookie.auth]);
+  }
 
   const handleUsernameChange = val => {
     setUsername (val);
@@ -146,7 +152,7 @@ function App () {
         logOut={logOut}
       />
       <Container>
-        {isLoggedIn ? <Homepage userId={userId} /> : <WelcomeBadge />}
+        {isLoggedIn ? <Homepage userId={userId} notes={notes} /> : <WelcomeBadge />}
       </Container>
     </div>
   );
