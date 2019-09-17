@@ -17,25 +17,52 @@ import CardComponent from './CardComponent';
 
 import './Homepage.css';
 
-const Homepage = ({userId}) => {
+const Homepage = ({userId, notes, getBooks}) => {
   const inputEl = useRef ();
   const [title, setTitle] = useState ('');
   const [body, setBody] = useState ('');
+  const [noteId, setNoteId] = useState('');
   const [titleCount, updatetitleCount] = useState (0);
   const [bodyCount, updatebodyCount] = useState (0);
   const [cookie] = useCookies (['auth']);
+  const [mode, setMode] = useState('')
 
-  const handleTitleChange = e => {
-    if (20 - e.target.value.length >= 0) {
-      setTitle (e.target.value);
-      updateCount (e.target.value);
+  const editCard = (ele) =>{
+    setMode('edit')
+    handleTitleChange({name:'element',ele})
+    handleBodyChange({name: 'element', ele})
+  }
+
+
+
+  const handleTitleChange = (...args) => {
+    let result = args[0];
+   
+    if(result.name==='element'){
+      if (20 - result.ele.title.length >= 0) {
+        setTitle (result.ele.title);
+        updateCount (result.ele.title);
+      }
+      return
+    }
+    if (20 - result.target.value.length >= 0) {
+      setTitle (result.target.value);
+      updateCount (result.target.value);
     }
   };
 
-  const handleBodyChange = e => {
-    if (100 - e.target.value.length >= 0) {
-      setBody (e.target.value);
-      updateBodyCount (e.target.value);
+  const handleBodyChange = (...args) => {
+    let result = args[0];
+    if(result.name==='element'){
+      if (100 - result.ele.body.length >= 0) {
+        setBody (result.ele.body);
+        updateBodyCount (result.ele.body);
+      }
+      return
+    }
+    if (100 - result.target.value.length >= 0) {
+      setBody (result.target.value);
+      updateBodyCount (result.target.value);
     }
   };
 
@@ -51,12 +78,11 @@ const Homepage = ({userId}) => {
     e.preventDefault ();
     const ele = document.getElementById ('title');
     ele.focus ();
-    inputEl.current.focus ();
   };
 
   const handleSubmit = () => {
     axios
-      .post ('/api/createnote', {
+      .post ('/api/createnote', { 
         title,
         body,
         userId
@@ -64,9 +90,9 @@ const Homepage = ({userId}) => {
         headers: {
           Authorization: `Bearer ${cookie.auth}`,
         },
-       
       })
       .then (resp => {
+        getBooks()
         setTitle('')
         setBody('')
       })
@@ -118,9 +144,9 @@ const Homepage = ({userId}) => {
         </div>
         <div className="card-container">
           <Row>
-            {[1, 2, 3, 4].map ((ele, index) => (
-              <Col className="card-component" key={index} xs="6" sm="4">
-                <CardComponent key={index} focusOnTitle={focusOnTitle} />
+            {notes.map ((ele, index) => (
+              <Col className="card-component" key={index} index={index} xs="6" sm="4">
+                <CardComponent key={index} editCard={editCard} ele={ele} cardTitle={ele.title} cardBody={ele.body} handleTitleChange={handleTitleChange} focusOnTitle={focusOnTitle} />
               </Col>
             ))}
 
