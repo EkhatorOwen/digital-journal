@@ -25,10 +25,15 @@ module.exports = app =>{
                .catch(e=>{
                  console.log(e)
                })
-
-
       }
     })
+  })
+
+  app.put('/api/updatenote/:id',checkToken,(req,res)=>{
+      console.log('body',req.body)
+      console.log('params',req.params.id)
+
+      res.status(200).json({type:'success', message: 'successfully saved'})
   })
      
 }
