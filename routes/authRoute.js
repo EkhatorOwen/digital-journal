@@ -86,11 +86,9 @@ module.exports = app => {
               res.status(200).json({type:'success',message: resp})
             })
             .catch(err=>{
-              res.redirect('/')
+              console.log(err)
+              res.redirect('/') 
               })
-
-
-          res.status (200).json ({type:'success',message: req.session.user});
         }
       });
     })
