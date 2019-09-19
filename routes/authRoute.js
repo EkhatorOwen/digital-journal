@@ -77,18 +77,9 @@ module.exports = app => {
     app.get('/api/getuser',checkToken,(req,res)=>{
       jwt.verify (req.session.token, process.env.JWTSECRET, (err, authData) => {
         if (err) {
-          res.status (200).json ({type:'error',message: "invalid token"});
+          return  res.status (200).json ({type:'error',message: "invalid token"});
         } else {
-          Note
-            .find({user: req.session.user._id})
-            .populate('user')
-            .then(resp=>{
-              res.status(200).json({type:'success',message: resp})
-            })
-            .catch(err=>{
-              console.log(err)
-              res.redirect('/') 
-              })
+            return res.status(200).json({type:'success',message: req.session.user})   
         }
       });
     })
