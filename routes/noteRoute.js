@@ -16,7 +16,7 @@ module.exports = app =>{
         const newNote = new Note({
           title,
           body,
-          user: userId
+    
         })
         newNote.save()
                .then(resp=>{
@@ -30,10 +30,59 @@ module.exports = app =>{
   })
 
   app.put('/api/updatenote/:id',checkToken,(req,res)=>{
-      console.log('body',req.body)
-      console.log('params',req.params.id)
 
-      res.status(200).json({type:'success', message: 'successfully saved'})
+    jwt.verify(req.session.token, process.env.JWTSECRET, (err, authData)=>{
+
+      const id = req.params.id;
+      const data = req.body
+      Note.findOneAndUpdate({_id: id},data, {new: true})
+          .then(resp=>{
+            Note.find({user: req.session.user._id})
+                .populate('user')
+                .then(resp=>{
+                  res.status(200).json({type:'success', message: resp})
+
+                })
+          })
+          .catch(err=>{
+            console.log(err)
+          })
+    })
+    
   })
-     
+     app.get('/api/getbooks',checkToken, (req,res)=>{
+       jwt.verify(req.session.token, process.env.JWTSECRET,(err,authData)=>{
+         if(err){
+           //whenever there is an error, this should always redirect to the root
+           res.redirect('/')
+         } else {
+          // if(!req.session._id){ return res.status(500).json({type:'error', message:'please log back in and try again'})}
+           Note
+              .find({user: req.session.user._id})
+              .populate('user')
+              .then(resp=>{
+                res.status(200).json({type:'success', message: resp})
+              })
+              .catch(err=>{
+                console.log(err)
+                res.redirect('/')
+              })
+         }
+       })
+     })
+
+     app.delete('/api/deletenote/:id',checkToken, (req,res)=>{
+       jwt.verify(req.session.token, process.env.JWTSECRET,(err,authData)=>{
+         const id = req.params.id;
+         if(err){
+           res.redirect('/')
+         } else {
+           Note
+              .deleteOne({_id:id })
+              .then(resp=>console.log(resp))
+              .catch(err=>cosnole.log(err))
+        
+         }
+       })
+     })
 }
