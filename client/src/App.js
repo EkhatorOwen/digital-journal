@@ -9,6 +9,7 @@ import Homepage from './components/Homepage/Homepage';
 import WelcomeBadge from './components/WelcomeBadge/WelcomeBadge';
 
 function App () {
+  const [user, setUser] = useState([])
   const [isLoggedIn, setLoggedIn] = useState (false);
   const [userId, setUserId] = useState('')
   const [username, setUsername] = useState ('');
@@ -22,11 +23,22 @@ function App () {
   const [notes, setNotes] = useState([])
 
   useEffect (() => {
-    //check if there is a cookie, then send the cookie to the backend to
-    getBooks();
+   getUser()
+  isLoggedIn && getBooks ()
   },[cookie.auth]);
 
   const getBooks = () =>{
+    axios.get('/api/getbooks',{headers: {
+      Authorization: `Bearer ${cookie.auth}`,
+    }})
+    .then(resp=>{
+      
+      setNotes(resp.data.message || [])
+    })
+  }
+
+  const getUser = () =>{
+    //check if there is a cookie, then send the cookie to the backend 
     axios
       .get ('/api/getuser', {
         headers: {
@@ -40,7 +52,7 @@ function App () {
           return setLoggedIn (false);
         } else if (resp.data.type === 'success') {
          // setUserId(username)
-         setNotes(resp.data.message)
+          getBooks();
           return setLoggedIn (true);
         }
         return setLoggedIn (false);
@@ -90,16 +102,16 @@ function App () {
       )
       .then (resp => {
         if (resp.data.type === 'success') {
+          setUser(resp.data.resp)
           setUserId(resp.data.resp._id)
           setLoggedIn (true);
+          getBooks()
           updateLoginModal(false)
           return setCookie ('auth', resp.data.token);
         }
          else if (resp.data.type==='error'){
             return setError(resp.data.message)
          }
-
-        console.log (resp.data);
       })
       .catch (err => console.log (err));
   };
@@ -152,7 +164,7 @@ function App () {
         logOut={logOut}
       />
       <Container>
-        {isLoggedIn ? <Homepage userId={userId} notes={notes} /> : <WelcomeBadge />}
+        {isLoggedIn ? <Homepage userId={userId} notes={notes} getBooks={getBooks} /> : <WelcomeBadge />}
       </Container>
     </div>
   );
