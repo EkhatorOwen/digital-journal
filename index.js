@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3001;
 
 
 const authRoute = require('./routes/authRoute');
+const noteRoute = require('./routes/noteRoute')
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(
 )
 
 authRoute(app);
+noteRoute(app)
 
 app.post('/api',(req,res)=>{
   console.log(req.body)
