@@ -16,7 +16,7 @@ module.exports = app =>{
         const newNote = new Note({
           title,
           body,
-    
+          user: userId
         })
         newNote.save()
                .then(resp=>{
@@ -79,7 +79,9 @@ module.exports = app =>{
          } else {
            Note
               .deleteOne({_id:id })
-              .then(resp=>console.log(resp))
+              .then(resp=>{
+                 res.status(200).json({type:'success', message: resp})
+              })
               .catch(err=>cosnole.log(err))
         
          }
