@@ -1,4 +1,4 @@
-import React, {useRef,  useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Container,
   Row,
@@ -21,44 +21,96 @@ const Homepage = ({userId, notes, getBooks}) => {
   const inputEl = useRef ();
   const [title, setTitle] = useState ('');
   const [body, setBody] = useState ('');
-  const [noteId, setNoteId] = useState('');
+  const [noteId, setNoteId] = useState ('');
   const [titleCount, updatetitleCount] = useState (0);
   const [bodyCount, updatebodyCount] = useState (0);
   const [cookie] = useCookies (['auth']);
-  const [mode, setMode] = useState('')
+  const [edit, setEdit] = useState (false);
 
-  const editCard = (ele) =>{
-    setMode('edit')
-    handleTitleChange({name:'element',ele})
-    handleBodyChange({name: 'element', ele})
-  }
+  const editCard = ele => {
+    const title = document.getElementById ('title');
+    title.focus ();
+    setEdit (true);
+    setNoteId (ele._id);
+    handleTitleChange ({name: 'element', ele});
+    handleBodyChange ({name: 'element', ele});
+  };
 
+  const toggleCancel = () => {
+    setEdit (false);
+    handleTitleChange ('');
+    handleBodyChange ('');
+  };
 
+  const deleteNote = (ele) => {
+    axios
+      .delete (`/api/deletenote/${ele._id}`,{
+        headers: {
+          Authorization: `Bearer ${cookie.auth}`,
+        }
+      })
+      .then (resp => getBooks())
+      .catch (err => console.log (err));
+  };
+
+  const updateNote = () => {
+    axios
+      .put (
+        `/api/updatenote/${noteId}`,
+        {title, body},
+        {
+          headers: {
+            Authorization: `Bearer ${cookie.auth}`,
+          },
+        }
+      )
+      .then (resp => {
+        setEdit (false);
+        getBooks ();
+        setTitle('')
+        setBody('')
+      })
+      .catch (err => console.log (err));
+  };
 
   const handleTitleChange = (...args) => {
     let result = args[0];
-   
-    if(result.name==='element'){
+
+    if(20-result.length){
+      setTitle(result)
+      updateCount(result)
+      return
+    }
+
+    if (result.name === 'element') {
       if (20 - result.ele.title.length >= 0) {
         setTitle (result.ele.title);
         updateCount (result.ele.title);
       }
-      return
+      return;
     }
-    if (20 - result.target.value.length >= 0) {
-      setTitle (result.target.value);
-      updateCount (result.target.value);
+    if(result.target.value.length){
+      if (20 - result.target.value.length >= 0) {
+        setTitle (result.target.value);
+        updateCount (result.target.value);
+      }
     }
   };
 
   const handleBodyChange = (...args) => {
     let result = args[0];
-    if(result.name==='element'){
+
+    if(100-result.length){
+      setBody('')
+      updateBodyCount ('');
+      return
+    }
+    if (result.name === 'element') {
       if (100 - result.ele.body.length >= 0) {
         setBody (result.ele.body);
         updateBodyCount (result.ele.body);
       }
-      return
+      return;
     }
     if (100 - result.target.value.length >= 0) {
       setBody (result.target.value);
@@ -82,19 +134,25 @@ const Homepage = ({userId, notes, getBooks}) => {
 
   const handleSubmit = () => {
     axios
-      .post ('/api/createnote', { 
-        title,
-        body,
-        userId
-      }, {
-        headers: {
-          Authorization: `Bearer ${cookie.auth}`,
+      .post (
+        '/api/createnote',
+        {
+          title,
+          body,
+          userId,
         },
-      })
+        {
+          headers: {
+            Authorization: `Bearer ${cookie.auth}`,
+          },
+        }
+      )
       .then (resp => {
-        getBooks()
-        setTitle('')
-        setBody('')
+        getBooks ();
+        handleTitleChange('')
+        handleBodyChange('')
+        // setTitle ('');
+        // setBody ('');
       })
       .catch (err => console.log (err));
   };
@@ -139,14 +197,37 @@ const Homepage = ({userId, notes, getBooks}) => {
             <p className="instruction">
               Use the form above to create a post and make sure you fill the required title and body fields and then press submit.
             </p>
-            <Button onClick={handleSubmit}>Submit</Button>
+            {edit &&
+              <>
+                {' '}
+                <Button onClick={toggleCancel} color="danger">Cancel</Button>
+                {' '}
+                <Button onClick={updateNote}>Save</Button>
+                {' '}
+              </>}
+            {!edit && <Button onClick={handleSubmit}>Submit</Button>}
           </Form>
         </div>
         <div className="card-container">
           <Row>
             {notes.map ((ele, index) => (
-              <Col className="card-component" key={index} index={index} xs="6" sm="4">
-                <CardComponent key={index} editCard={editCard} ele={ele} cardTitle={ele.title} cardBody={ele.body} handleTitleChange={handleTitleChange} focusOnTitle={focusOnTitle} />
+              <Col
+                className="card-component"
+                key={index}
+                index={index}
+                xs="6"
+                sm="4"
+              >
+                <CardComponent
+                  key={index}
+                  editCard={editCard}
+                  ele={ele}
+                  cardTitle={ele.title}
+                  cardBody={ele.body}
+                  handleTitleChange={handleTitleChange}
+                  focusOnTitle={focusOnTitle}
+                  deleteNote={deleteNote}
+                />
               </Col>
             ))}
 
