@@ -8,10 +8,21 @@ const cors = require('cors');
 const PORT = process.env.PORT || 3001;
 
 
-const authRoute = require('./routes/authRoute');
-const noteRoute = require('./routes/noteRoute')
+
+const authRoute = require(`${__dirname}/routes/authRoute`);
+const noteRoute = require(`${__dirname}/routes/noteRoute`);
 
 const app = express();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(__dirname + "/client/build"));
+
+  const path = require("path");
+  app.get("*", (req, res) => {
+      res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
+
 
 mongoose.connect(process.env.MONGO_URL).catch(err => {
   console.log("error connecting to DB:", err);
