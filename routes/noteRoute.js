@@ -1,7 +1,6 @@
 const jwt = require ('jsonwebtoken');
 const checkToken = require('../middleware/checkToken');
 const Note = require('../models/Note');
-const User = require('../models/User');
 
 
 
