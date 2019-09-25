@@ -38,8 +38,8 @@ const Homepage = ({userId, notes, getBooks}) => {
 
   const toggleCancel = () => {
     setEdit (false);
-    handleTitleChange ('');
-    handleBodyChange ('');
+    handleTitleChange ({name:'cancel'});
+    handleBodyChange ({name:'cancel'});
   };
 
   const deleteNote = (ele) => {
@@ -75,12 +75,14 @@ const Homepage = ({userId, notes, getBooks}) => {
 
   const handleTitleChange = (...args) => {
     let result = args[0];
-
-    if(20-result.length){
-      setTitle(result)
-      updateCount(result)
-      return
+    if(result.name==="cancel"){
+      if (20 - ''.length >= 0) {
+        setTitle ('');
+        updateCount ('');
+      }
+      return;
     }
+ 
 
     if (result.name === 'element') {
       if (20 - result.ele.title.length >= 0) {
@@ -89,21 +91,21 @@ const Homepage = ({userId, notes, getBooks}) => {
       }
       return;
     }
-    if(result.target.value.length){
       if (20 - result.target.value.length >= 0) {
         setTitle (result.target.value);
         updateCount (result.target.value);
       }
-    }
+    
   };
 
   const handleBodyChange = (...args) => {
     let result = args[0];
-
-    if(100-result.length){
-      setBody('')
-      updateBodyCount ('');
-      return
+    if(result.name==="cancel"){
+      if (20 - ''.length >= 0) {
+        setBody ('');
+        updateBodyCount ('');
+      }
+      return;
     }
     if (result.name === 'element') {
       if (100 - result.ele.body.length >= 0) {
@@ -149,10 +151,9 @@ const Homepage = ({userId, notes, getBooks}) => {
       )
       .then (resp => {
         getBooks ();
-        handleTitleChange('')
-        handleBodyChange('')
-        // setTitle ('');
-        // setBody ('');
+        handleTitleChange ({name:'cancel'});
+        handleBodyChange ({name:'cancel'});
+        
       })
       .catch (err => console.log (err));
   };
