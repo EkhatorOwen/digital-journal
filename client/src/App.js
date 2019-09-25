@@ -22,6 +22,9 @@ function App () {
   const [notes, setNotes] = useState([])
 
   useEffect (() => {
+    if(cookie.auth && isLoggedIn===false){
+      setLoggedIn(true)
+    }
    getUser()
   isLoggedIn && getBooks ()
   },[cookie.auth]);
