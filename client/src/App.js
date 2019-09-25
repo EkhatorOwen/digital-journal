@@ -9,7 +9,6 @@ import Homepage from './components/Homepage/Homepage';
 import WelcomeBadge from './components/WelcomeBadge/WelcomeBadge';
 
 function App () {
-  const [user, setUser] = useState([])
   const [isLoggedIn, setLoggedIn] = useState (false);
   const [userId, setUserId] = useState('')
   const [username, setUsername] = useState ('');
@@ -102,7 +101,6 @@ function App () {
       )
       .then (resp => {
         if (resp.data.type === 'success') {
-          setUser(resp.data.resp)
           setUserId(resp.data.resp._id)
           setLoggedIn (true);
           getBooks()
