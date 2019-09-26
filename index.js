@@ -16,20 +16,11 @@ const app = express();
 app.set('ETag',false);
 
 if (process.env.NODE_ENV === "production") {
-  var options = {
-    dotfiles: 'ignore',
-    etag: false,
-    extensions: ['htm', 'html'],
-    index: false,
-    maxAge: '1d',
-    redirect: false,
-    setHeaders: function (res, path, stat) {
-      res.set('x-timestamp', Date.now())
-    }
-  }
-
+  
   //https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
-  app.use(express.static(__dirname + "/client/build"),options);
+  app.use(express.static(path.join(__dirname, 'public'), {
+    etag: false
+}));
   
   const path = require("path");
   app.get("*", (req, res) => {
