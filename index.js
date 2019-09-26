@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === "production") {
 
   //https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
  
-  app.use(express.static(__dirname + "/client/build"),{etag: false});
+  app.use(express.static(__dirname + "/client/build",{etag: false}));
   
   const path = require("path");
   app.get("*", (req, res) => {
