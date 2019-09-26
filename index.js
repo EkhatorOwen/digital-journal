@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 3001;
 
 
 
-const authRoute = require(`${__dirname}/routes/authRoute`);
-const noteRoute = require(`${__dirname}/routes/noteRoute`);
+const authRoute = require(`./routes/authRoute`);
+const noteRoute = require(`./routes/noteRoute`);
 
 const app = express();
 
@@ -22,11 +22,7 @@ if (process.env.NODE_ENV === "production") {
       res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 
-  app.get('*', (req,res) =>{
-    res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
 }
-
 
 mongoose.connect(process.env.MONGO_URL).catch(err => {
   console.log("error connecting to DB:", err);
