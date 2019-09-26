@@ -15,6 +15,9 @@ const noteRoute = require(`./routes/noteRoute`);
 const app = express();
 
 if (process.env.NODE_ENV === "production") {
+
+  //https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
+  app.disable('etag');
   app.use(express.static(__dirname + "/client/build"));
 
   const path = require("path");
