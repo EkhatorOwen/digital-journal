@@ -57,7 +57,6 @@ function App () {
           getBooks();
           return setLoggedIn (true);
         }
-        return setLoggedIn (false);
       })
       .catch (err => {
         console.log (err);
