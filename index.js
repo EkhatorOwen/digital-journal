@@ -18,11 +18,11 @@ app.set('etag',false);
 if (process.env.NODE_ENV === "production") {
 
   //https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
-  app.use(express.static(__dirname + "/client/build"),{etag: false});
+  app.use(express.static(__dirname + "/client/build"));
   
   const path = require("path");
   app.get("*", (req, res) => {
-      res.sendFile(path.resolve(__dirname, "client", "build", "index.html"),{etag: false});
+      res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 
 }
