@@ -50,6 +50,7 @@ module.exports = app =>{
     
   })
      app.get('/api/getbooks',checkToken, (req,res)=>{
+      req.method="NONE";
        jwt.verify(req.session.token, process.env.JWTSECRET,(err,authData)=>{
          if(err){
            //whenever there is an error, this should always redirect to the root
