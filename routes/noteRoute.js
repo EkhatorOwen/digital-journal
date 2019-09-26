@@ -50,17 +50,17 @@ module.exports = app =>{
     
   })
      app.get('/api/getbooks',checkToken, (req,res)=>{
-      req.method="NONE";
        jwt.verify(req.session.token, process.env.JWTSECRET,(err,authData)=>{
          if(err){
            //whenever there is an error, this should always redirect to the root
            res.redirect('/')
          } else {
-          // if(!req.session._id){ return res.status(500).json({type:'error', message:'please log back in and try again'})}
+           // if(!req.session._id){ return res.status(500).json({type:'error', message:'please log back in and try again'})}
            Note
               .find({user: req.session.user._id})
               .populate('user')
               .then(resp=>{
+                req.method="NONE";
                 res.status(200).json({type:'success', message: resp})
               })
               .catch(err=>{
