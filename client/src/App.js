@@ -29,9 +29,9 @@ function App () {
   // getUser()
  // user && 
  //console.log(user.user)
- if(user.user){
-   getBooks()
- }
+//  if(user.user){
+//    getBooks()
+//  }
   // isLoggedIn && getBooks ()
   },[cookie.auth]);
 
@@ -41,7 +41,7 @@ function App () {
       Authorization: `Bearer ${cookie.auth}`,
     }})
     .then(resp=>{
-      
+      console.log(resp)
       setNotes(resp.data.message || [])
     })
   }
@@ -113,10 +113,10 @@ function App () {
         if (resp.data.type === 'success') {
          // setUserId(resp.data.resp._id)
           setLoggedIn (true);
-          getBooks()
           updateLoginModal(false)
           setUser('user', resp.data.resp._id)
-          return setCookie ('auth', resp.data.token);
+          setCookie ('auth', resp.data.token);
+          getBooks()
         }
          else if (resp.data.type==='error'){
             return setError(resp.data.message)
@@ -134,11 +134,12 @@ function App () {
     axios
       .post ('/api/signup', {username, password})
       .then (resp => {
-       // setUserId(resp.data.resp._id)
+        // setUserId(resp.data.resp._id)
+        setCookie ('auth', resp.data.token);
         setUser('user',resp.data.resp._id)
         setLoggedIn (true);
         updateSignUpModal(false)
-        return  setCookie ('auth', resp.data.token);
+        getBooks()
       })
       .catch (err => console.log (err));
   };
