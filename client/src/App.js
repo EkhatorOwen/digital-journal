@@ -15,6 +15,7 @@ function App () {
   const [password, setPassword] = useState ('');
   const [confirmPassword, setConfirmPassword] = useState ('');
   const [cookie, setCookie, removeCookie] = useCookies (['auth']);
+  const [user, setUser, removeUser] = useCookies(['user'])
   const [isOpen, updateOpen] = useState (false);
   const [loginModalOpen, updateLoginModal] = useState (false);
   const [signUpModalOpen, updateSignUpModal] = useState (false);
@@ -25,11 +26,17 @@ function App () {
     if(cookie.auth && isLoggedIn===false){
       setLoggedIn(true)
     }
-   getUser()
-  isLoggedIn && getBooks ()
+  // getUser()
+ // user && 
+ //console.log(user.user)
+ if(user.user){
+   getBooks()
+ }
+  // isLoggedIn && getBooks ()
   },[cookie.auth]);
 
   const getBooks = () =>{
+    console.log('hit')
     axios.get('/api/getbooks',{headers: {
       Authorization: `Bearer ${cookie.auth}`,
     }})
@@ -84,7 +91,8 @@ function App () {
       })
       .then (resp => {
         removeCookie('auth')
-        setUserId('')
+       // setUserId('')
+       removeUser('user')
         setLoggedIn (false);
         emptyFields()
       })
@@ -103,10 +111,11 @@ function App () {
       )
       .then (resp => {
         if (resp.data.type === 'success') {
-          setUserId(resp.data.resp._id)
+         // setUserId(resp.data.resp._id)
           setLoggedIn (true);
           getBooks()
           updateLoginModal(false)
+          setUser('user', resp.data.resp._id)
           return setCookie ('auth', resp.data.token);
         }
          else if (resp.data.type==='error'){
@@ -125,7 +134,8 @@ function App () {
     axios
       .post ('/api/signup', {username, password})
       .then (resp => {
-        setUserId(resp.data.resp._id)
+       // setUserId(resp.data.resp._id)
+        setUser('user',resp.data.resp._id)
         setLoggedIn (true);
         updateSignUpModal(false)
         return  setCookie ('auth', resp.data.token);
@@ -164,7 +174,7 @@ function App () {
         logOut={logOut}
       />
       <Container>
-        {isLoggedIn ? <Homepage userId={userId} notes={notes} getBooks={getBooks} /> : <WelcomeBadge />}
+        {isLoggedIn ? <Homepage userId={user} notes={notes} getBooks={getBooks} /> : <WelcomeBadge />}
       </Container>
     </div>
   );
