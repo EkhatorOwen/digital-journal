@@ -13,11 +13,9 @@ const authRoute = require(`./routes/authRoute`);
 const noteRoute = require(`./routes/noteRoute`);
 
 const app = express();
-app.set('ETag',false);
 
 if (process.env.NODE_ENV === "production") {
  
-  //https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
  
   app.use(express.static(__dirname + "/client/build",{etag: false}));
   

@@ -60,7 +60,6 @@ module.exports = app =>{
               .find({user: req.session.user._id})
               .populate('user')
               .then(resp=>{
-                req.method="NONE";
                 res.status(200).json({type:'success', message: resp})
               })
               .catch(err=>{
